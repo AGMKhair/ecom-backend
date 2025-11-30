@@ -14,4 +14,11 @@ public class UpdateUserRequest {
     private String phoneNo;
     private Integer status;     // int
     private Integer type;       // int
+
+    private String streetAddress;
+    private String shippingAddress;
+
+    private Integer divisionId;
+    private Integer districtId;
+
 }

@@ -25,6 +25,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public APIResponse<?> handleGlobal(Exception ex) {
         ex.printStackTrace();
-        return APIResponseBuilder.internalError("Something went wrong!\n" +  ex.getMessage());
+        return APIResponseBuilder.internalError("Something went wrong! " +  ex.getMessage());
     }
 }

@@ -12,11 +12,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private OrderRepository orderRepository;
-
+    private final OrderRepository orderRepository;  // FIXED
 
     public Orders createOrder(OrderRequest request) {
         Orders order = new Orders();
+
         order.setUserId(request.getUserId());
         order.setName(request.getName());
         order.setPhoneNo(request.getPhoneNo());
@@ -27,6 +27,8 @@ public class OrderService {
         order.setShippingCharge(request.getShippingCharge());
         order.setPaidAmt(request.getPaidAmt());
         order.setAccountNo(request.getAccountNo());
+
+        // default values
         order.setIsPaid(0);
         order.setIsCompleted(0);
         order.setIsSeenByAdmin(0);
@@ -53,14 +55,25 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
-
-    public Orders getOrder(Long id) {
-        return orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+    public List<Orders> getOrder(Long userId) {
+        return orderRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Orders not found"));
     }
 
 
     public List<Orders> getAllOrders() {
         return orderRepository.findAll();
+    }
+
+    public List<Orders> getUnpaidOrders(Long userId) {
+        return orderRepository.findByUserIdAndIsPaid(userId, 0);
+    }
+
+    public List<Orders> getPaidOrders(Long userId) {
+        return orderRepository.findByUserIdAndIsPaid(userId, 1);
+    }
+
+    public List<Orders> getCompletedOrders(Long userId) {
+        return orderRepository.findByUserIdAndIsCompleted(userId, 1);
     }
 }

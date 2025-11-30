@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -94,20 +95,54 @@ public class UserService {
     public User updateUser(UpdateUserRequest req) {
 
         Optional<User> optional = userRepo.findById(req.getId());
-
         if (optional.isEmpty()) {
-            return null; // or throw exception
+            return null;
         }
 
         User user = optional.get();
 
-        // Update only allowed fields
-        if (req.getFirstName() != null) user.setFirstName(req.getFirstName());
-        if (req.getLastName() != null) user.setLastName(req.getLastName());
-        if (req.getEmail() != null) user.setEmail(req.getEmail());
-        if (req.getPhoneNo() != null) user.setPhoneNo(req.getPhoneNo());
-        if (req.getStatus() != null) user.setStatus(req.getStatus());
-        if (req.getType() != null) user.setType(req.getType());
+        // Update only when value is not null AND not empty
+        if (req.getFirstName() != null && !req.getFirstName().isBlank()) {
+            user.setFirstName(req.getFirstName());
+        }
+
+        if (req.getLastName() != null && !req.getLastName().isBlank()) {
+            user.setLastName(req.getLastName());
+        }
+
+        if (req.getEmail() != null && !req.getEmail().isBlank()) {
+            user.setEmail(req.getEmail());
+        }
+
+        if (req.getPhoneNo() != null && !req.getPhoneNo().isBlank()) {
+            user.setPhoneNo(req.getPhoneNo());
+        }
+
+        if (req.getStreetAddress() != null && !req.getStreetAddress().isBlank()) {
+            user.setStreetAddress(req.getStreetAddress());
+        }
+
+        if (req.getShippingAddress() != null && !req.getShippingAddress().isBlank()) {
+            user.setShippingAddress(req.getShippingAddress());
+        }
+
+        if (req.getDivisionId() != null) {
+            user.setDivisionId(req.getDivisionId());
+        }
+
+        if (req.getDistrictId() != null) {
+            user.setDistrictId(req.getDistrictId());
+        }
+
+        if (req.getStatus() != null) {
+            user.setStatus(req.getStatus());
+        }
+
+        if (req.getType() != null) {
+            user.setType(req.getType());
+        }
+
+        user.setUpdatedAt(LocalDateTime.now());
 
         return userRepo.save(user);
     }

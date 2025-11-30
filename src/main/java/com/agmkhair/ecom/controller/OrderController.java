@@ -31,8 +31,8 @@ public class OrderController {
         return "Order deleted successfully";
     }
 
-    @GetMapping("/{id}")
-    public Orders get(@PathVariable Long id) {
+    @GetMapping
+    public List<Orders> get(@RequestParam Long id) {
         return service.getOrder(id);
     }
 
@@ -40,4 +40,23 @@ public class OrderController {
     public List<Orders> all() {
         return service.getAllOrders();
     }
+
+    // UNPAID
+    @GetMapping("/unpaid")
+    public List<Orders> getUnpaid(@RequestParam Long id) {
+        return service.getUnpaidOrders(id);
+    }
+
+    // PAID
+    @GetMapping("/paid")
+    public List<Orders> getPaid(@RequestParam Long id) {
+        return service.getPaidOrders(id);
+    }
+
+    // COMPLETED
+    @GetMapping("/complete")
+    public List<Orders> getCompleted(@RequestParam Long id) {
+        return service.getCompletedOrders(id);
+    }
+
 }
