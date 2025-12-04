@@ -1,5 +1,6 @@
 package com.agmkhair.ecom.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "item_images")
+@Table(name = "product_images")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,7 +27,9 @@ public class ItemImage {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    // ⭐ Many Images -> One Item
     @ManyToOne
-    @JoinColumn(name = "item_id", nullable = false)
-    private Item item;
+    @JoinColumn(name = "product_id") // foreign key column
+    @JsonBackReference
+    private Products product;
 }

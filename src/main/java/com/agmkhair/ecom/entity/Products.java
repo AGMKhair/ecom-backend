@@ -1,23 +1,29 @@
 package com.agmkhair.ecom.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "items")
+@Table(name = "products")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Item {
+public class Products {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "brand_id")
-    private Long brandId; // optional FK to Brand
+    private Long brandId;
 
     private String title;
 
@@ -33,6 +39,8 @@ public class Item {
     private String unit;
 
     private BigDecimal price;
+
+    @Column(name = "price_sar")
     private BigDecimal priceSar;
 
     @Column(name = "free_shipment")
@@ -64,7 +72,8 @@ public class Item {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // OneToMany images
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<ItemImage> images;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<ItemImage> images = new ArrayList<>();
+
 }

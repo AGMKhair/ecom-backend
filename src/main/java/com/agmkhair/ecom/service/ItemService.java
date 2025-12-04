@@ -1,6 +1,6 @@
 package com.agmkhair.ecom.service;
 
-import com.agmkhair.ecom.entity.Item;
+import com.agmkhair.ecom.entity.Products;
 import com.agmkhair.ecom.entity.ItemImage;
 import com.agmkhair.ecom.repository.ItemImageRepository;
 import com.agmkhair.ecom.repository.ItemRepository;
@@ -21,26 +21,26 @@ public class ItemService {
     private final ItemImageRepository imageRepo;
     private final FileStorageService storage;
 
-    public Item getById(Long id) {
+    public Products getById(Long id) {
         return itemRepo.findById(id).orElse(null);
     }
 
-    public List<Item> getAll() {
+    public List<Products> getAll() {
         return itemRepo.findAll();
     }
 
-    public List<Item> getByCategory(Long categoryId) {
+    public List<Products> getByCategory(Long categoryId) {
         return itemRepo.findByCategoryIdOrderByPriorityAsc(categoryId);
     }
 
-    public List<Item> getByBrand(Long brandId) {
+    public List<Products> getByBrand(Long brandId) {
         return itemRepo.findByBrandIdOrderByPriorityAsc(brandId);
     }
 
     @Transactional
-    public Item createItem(Item item, MultipartFile[] images) {
-        item.setCreatedAt(LocalDateTime.now());
-        Item saved = itemRepo.save(item);
+    public Products createItem(Products products, MultipartFile[] images) {
+        products.setCreatedAt(LocalDateTime.now());
+        Products saved = itemRepo.save(products);
 
         if (images != null) {
             List<ItemImage> list = new ArrayList<>();
@@ -48,8 +48,8 @@ public class ItemService {
                 String filename = storage.store(f);
                 ItemImage img = new ItemImage();
                 img.setImage(filename);
-                img.setItem(saved);
-                img.setCreatedAt(LocalDateTime.now());
+                img.setProduct(saved);
+                img.setCreatedAt(LocalDateTime.now( ));
                 imageRepo.save(img);
                 list.add(img);
             }
@@ -59,27 +59,27 @@ public class ItemService {
     }
 
     @Transactional
-    public Item updateItem(Long id, Item updated, MultipartFile[] images) {
-        return itemRepo.findById(id).map(item -> {
-            item.setTitle(updated.getTitle());
-            item.setDescription(updated.getDescription());
-            item.setSlug(updated.getSlug());
-            item.setQuantity(updated.getQuantity());
-            item.setUnit(updated.getUnit());
-            item.setPrice(updated.getPrice());
-            item.setPriceSar(updated.getPriceSar());
-            item.setFreeShipment(updated.getFreeShipment());
-            item.setStatus(updated.getStatus());
-            item.setOfferPrice(updated.getOfferPrice());
-            item.setOldPrice(updated.getOldPrice());
-            item.setOldPriceSar(updated.getOldPriceSar());
-            item.setFeatured(updated.getFeatured());
-            item.setPriority(updated.getPriority());
-            item.setOfferProduct(updated.getOfferProduct());
-            item.setAdmin(updated.getAdmin());
-            item.setBrandId(updated.getBrandId());
-            item.setCategoryId(updated.getCategoryId());
-            item.setUpdatedAt(LocalDateTime.now());
+    public Products updateItem(Long id, Products updated, MultipartFile[] images) {
+        return itemRepo.findById(id).map(products -> {
+            products.setTitle(updated.getTitle());
+            products.setDescription(updated.getDescription());
+            products.setSlug(updated.getSlug());
+            products.setQuantity(updated.getQuantity());
+            products.setUnit(updated.getUnit());
+            products.setPrice(updated.getPrice());
+            products.setPriceSar(updated.getPriceSar());
+            products.setFreeShipment(updated.getFreeShipment());
+            products.setStatus(updated.getStatus());
+            products.setOfferPrice(updated.getOfferPrice());
+            products.setOldPrice(updated.getOldPrice());
+            products.setOldPriceSar(updated.getOldPriceSar());
+            products.setFeatured(updated.getFeatured());
+            products.setPriority(updated.getPriority());
+            products.setOfferProduct(updated.getOfferProduct());
+            products.setAdmin(updated.getAdmin());
+            products.setBrandId(updated.getBrandId());
+            products.setCategoryId(updated.getCategoryId());
+            products.setUpdatedAt(LocalDateTime.now());
 
             // Add new images if provided
             if (images != null) {
@@ -87,30 +87,30 @@ public class ItemService {
                     String filename = storage.store(f);
                     ItemImage img = new ItemImage();
                     img.setImage(filename);
-                    img.setItem(item);
+                    img.setProduct(products);
                     img.setCreatedAt(LocalDateTime.now());
                     imageRepo.save(img);
                 }
             }
-            return itemRepo.save(item);
+            return itemRepo.save(products);
         }).orElse(null);
     }
 
     @Transactional
     public boolean deleteItem(Long id) {
-        return itemRepo.findById(id).map(item -> {
+        return itemRepo.findById(id).map(products -> {
             // delete images physically
-            List<ItemImage> imgs = imageRepo.findByItemId(id);
+            List<ItemImage> imgs = imageRepo.findByProductId(id);
             for (ItemImage im : imgs) {
                 storage.delete(im.getImage());
             }
             imageRepo.deleteAll(imgs);
-            itemRepo.delete(item);
+            itemRepo.delete(products);
             return true;
         }).orElse(false);
     }
 
     public List<ItemImage> getImages(Long itemId) {
-        return imageRepo.findByItemId(itemId);
+        return imageRepo.findByProductId(itemId);
     }
 }

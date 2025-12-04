@@ -1,0 +1,32 @@
+CREATE TABLE IF NOT EXISTS products (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    brand_id BIGINT,
+    title VARCHAR(255),
+    category_id BIGINT,
+    description TEXT NOT NULL,
+    slug VARCHAR(255),
+    quantity INT NOT NULL DEFAULT 1,
+    unit VARCHAR(255),
+    price DECIMAL(38,2),
+    price_sar DECIMAL(38,2),
+    free_shipment BIT,
+    status INT,
+    offer_price DECIMAL(38,2),
+    old_price DECIMAL(38,2),
+    old_price_sar DECIMAL(38,2),
+    featured VARCHAR(255),
+    priority INT,
+    offer_product VARCHAR(255),
+    admin INT NOT NULL,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS product_images (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    image VARCHAR(255),
+    item_id BIGINT,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    CONSTRAINT fk_item FOREIGN KEY (item_id) REFERENCES item(id) ON DELETE CASCADE
+);
