@@ -19,7 +19,7 @@ public class ItemService {
 
     private final ItemRepository itemRepo;
     private final ItemImageRepository imageRepo;
-    private final FileStorageService storage;
+    private final StorageService storage;
 
     public Products getById(Long id) {
         return itemRepo.findById(id).orElse(null);
@@ -49,7 +49,7 @@ public class ItemService {
                 ItemImage img = new ItemImage();
                 img.setImage(filename);
                 img.setProduct(saved);
-                img.setCreatedAt(LocalDateTime.now( ));
+                img.setCreatedAt(LocalDateTime.now());
                 imageRepo.save(img);
                 list.add(img);
             }
@@ -99,7 +99,6 @@ public class ItemService {
     @Transactional
     public boolean deleteItem(Long id) {
         return itemRepo.findById(id).map(products -> {
-            // delete images physically
             List<ItemImage> imgs = imageRepo.findByProductId(id);
             for (ItemImage im : imgs) {
                 storage.delete(im.getImage());
