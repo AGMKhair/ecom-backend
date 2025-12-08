@@ -26,18 +26,18 @@ public class CartController {
 
     // GET CART ITEMS BY USER
     @GetMapping("/user/{id}")
-    public APIResponse<List<Cart>> getByUser(@PathVariable Long id) {
+    public APIResponse<List<CartResponse>> getByUser(@PathVariable Long id) {
 
-        List<Cart> list = service.getCartByUser(id);
+        List<CartResponse> list = service.getCartByUser(id);
 
         return APIResponseBuilder.success("Cart items fetched", list);
     }
 
     // SAME STYLE → /api/carts/user?id=102
     @GetMapping("/user")
-    public APIResponse<List<Cart>> getByUserQueryParam(@RequestParam Long id) {
+    public APIResponse<List<CartResponse>> getByUserQueryParam(@RequestParam Long id) {
 
-        List<Cart> list = service.getCartByUser(id);
+        List<CartResponse> list = service.getCartByUser(id);
 
         return APIResponseBuilder.success("Cart items fetched", list);
     }

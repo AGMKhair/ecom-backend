@@ -1,20 +1,26 @@
 package com.agmkhair.ecom.service;
 
 import com.agmkhair.ecom.dto.AddCardRequest;
+import com.agmkhair.ecom.dto.CartResponse;
+import com.agmkhair.ecom.dto.ProductDTO;
 import com.agmkhair.ecom.dto.UpdateCartRequest;
 import com.agmkhair.ecom.entity.Cart;
+import com.agmkhair.ecom.entity.Products;
 import com.agmkhair.ecom.repository.CartRepository;
+import com.agmkhair.ecom.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
 
     private final CartRepository cartRepo;
+    private final ItemRepository productRepo;
 
     public Cart addToCart(AddCardRequest req) {
 
@@ -45,9 +51,36 @@ public class CartService {
         return cartRepo.save(cart);
     }
 
-    public List<Cart> getCartByUser(Long userId) {
-        return cartRepo.findByUserId(userId);
+
+    public List<CartResponse> getCartByUser(Long userId) {
+
+        List<Cart> carts = cartRepo.findByUserId(userId);
+
+        return carts.stream().map(cart -> {
+            CartResponse dto = new CartResponse();
+
+            dto.setId(cart.getId());
+            dto.setQuantity(cart.getQuantity());
+            dto.setRate(cart.getRate());
+            dto.setTotalAmt(cart.getTotalAmt());
+            dto.setSize(cart.getSize());
+
+            Products product = cart.getProducts();
+            if (product != null) {
+                ProductDTO productDTO = new ProductDTO();
+                productDTO.setId(product.getId());
+                productDTO.setName(product.getTitle());
+                productDTO.setPrice(product.getPrice());
+                productDTO.setImage(product.getImages());
+
+                dto.setProduct(productDTO);
+            }
+
+            return dto;
+        }).collect(Collectors.toList());
     }
+
+
 
     public Cart updateQuantity(UpdateCartRequest req) {
 
