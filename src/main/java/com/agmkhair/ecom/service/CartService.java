@@ -44,6 +44,8 @@ public class CartService {
         Cart cart = new Cart();
         cart.setUserId(req.getUserId());
         cart.setProductId(req.getProductId());
+        cart.setSize(req.getSize());
+        cart.setColor(req.getColor());
         cart.setQuantity(req.getQuantity());
         cart.setCreatedAt(LocalDateTime.now());
         cart.setUpdatedAt(LocalDateTime.now());
@@ -61,9 +63,8 @@ public class CartService {
 
             dto.setId(cart.getId());
             dto.setQuantity(cart.getQuantity());
-            dto.setRate(cart.getRate());
-            dto.setTotalAmt(cart.getTotalAmt());
             dto.setSize(cart.getSize());
+            dto.setColor(cart.getColor());
 
             Products product = cart.getProducts();
             if (product != null) {

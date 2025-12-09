@@ -6,6 +6,7 @@ import com.agmkhair.ecom.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,11 +18,17 @@ public class CartController {
 
     // ADD TO CART
     @PostMapping
-    public APIResponse<Cart> addToCart(@RequestBody AddCardRequest req) {
+    public APIResponse<List<CartResponse>>  addToCart(@RequestBody AddCardRequest req) {
 
+        List<CartResponse> list = new ArrayList<>();
         Cart cart = service.addToCart(req);
 
-        return APIResponseBuilder.success("Added to cart", cart);
+        if (cart != null )
+        {
+          list = service.getCartByUser(req.getUserId());
+          return APIResponseBuilder.success("Added to cart", list);
+        }
+        return APIResponseBuilder.internalError("Try Again");
     }
 
     // GET CART ITEMS BY USER

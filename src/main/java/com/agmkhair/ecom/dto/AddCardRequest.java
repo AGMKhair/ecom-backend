@@ -15,4 +15,9 @@ public class AddCardRequest {
 
     @NotNull
     private Integer quantity;
+
+    private String size;
+
+    private String color;
+
 }
