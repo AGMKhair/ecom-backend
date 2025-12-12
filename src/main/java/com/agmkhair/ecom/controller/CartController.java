@@ -20,6 +20,10 @@ public class CartController {
     @PostMapping
     public APIResponse<List<CartResponse>>  addToCart(@RequestBody AddCardRequest req) {
 
+        if (req.getUserId() == null)
+        {
+            return APIResponseBuilder.failed("Please login");
+        }
         List<CartResponse> list = new ArrayList<>();
         Cart cart = service.addToCart(req);
 
@@ -67,9 +71,7 @@ public class CartController {
 
         boolean deleted = service.deleteCartItem(id);
 
-        return deleted ?
-                APIResponseBuilder.success("Item deleted", null)
-                :
+        return deleted ? APIResponseBuilder.success("Item deleted", null) :
                 APIResponseBuilder.failed("Cart item not found");
     }
 }
