@@ -1,5 +1,7 @@
 package com.agmkhair.ecom.controller;
 
+import com.agmkhair.ecom.dto.APIResponse;
+import com.agmkhair.ecom.dto.APIResponseBuilder;
 import com.agmkhair.ecom.dto.OrderRequest;
 import com.agmkhair.ecom.entity.Orders;
 import com.agmkhair.ecom.service.OrderService;
@@ -16,19 +18,20 @@ public class OrderController {
     private final OrderService service;
 
     @PostMapping("/create")
-    public Orders create(@RequestBody OrderRequest request) {
-        return service.createOrder(request);
+    public APIResponse<Orders> create(@RequestBody OrderRequest request) {
+        return APIResponseBuilder.success("Order Confirm", service.createOrder(request));
+
     }
 
     @PutMapping("/update/{id}")
-    public Orders update(@PathVariable Long id, @RequestBody OrderRequest request) {
-        return service.updateOrder(id, request);
+    public APIResponse<Orders> update(@PathVariable Long id, @RequestBody OrderRequest request) {
+        return APIResponseBuilder.success("Order update",  service.updateOrder(id, request));
     }
 
     @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public APIResponse<Object> delete(@PathVariable Long id) {
         service.deleteOrder(id);
-        return "Order deleted successfully";
+        return APIResponseBuilder.success( "Order deleted successfully",null);
     }
 
     @GetMapping
@@ -37,26 +40,27 @@ public class OrderController {
     }
 
     @GetMapping("/all")
-    public List<Orders> all() {
-        return service.getAllOrders();
+    public APIResponse<List<Orders>> all() {
+        return APIResponseBuilder.success( "All Order",service.getAllOrders());
     }
 
     // UNPAID
     @GetMapping("/unpaid")
-    public List<Orders> getUnpaid(@RequestParam Long id) {
-        return service.getUnpaidOrders(id);
+    public APIResponse<List<Orders>> getUnpaid(@RequestParam Long id) {
+        return APIResponseBuilder.success( "Unpaid Order",service.getUnpaidOrders(id));
     }
 
     // PAID
     @GetMapping("/paid")
-    public List<Orders> getPaid(@RequestParam Long id) {
-        return service.getPaidOrders(id);
+    public APIResponse<List<Orders>> getPaid(@RequestParam Long id) {
+
+        return APIResponseBuilder.success( "Paid Order",service.getPaidOrders(id));
     }
 
     // COMPLETED
     @GetMapping("/complete")
-    public List<Orders> getCompleted(@RequestParam Long id) {
-        return service.getCompletedOrders(id);
+    public APIResponse<List<Orders>> getCompleted(@RequestParam Long id) {
+        return APIResponseBuilder.success( "Completed Order",service.getCompletedOrders(id));
     }
 
 }

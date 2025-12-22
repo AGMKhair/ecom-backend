@@ -18,6 +18,7 @@ public class OrderService {
         Orders order = new Orders();
 
         order.setUserId(request.getUserId());
+        order.setPaymentId(getPaymentMethod(request.getPaymentId()));
         order.setName(request.getName());
         order.setPhoneNo(request.getPhoneNo());
         order.setEmail(request.getEmail());
@@ -33,7 +34,12 @@ public class OrderService {
         order.setIsCompleted(0);
         order.setIsSeenByAdmin(0);
 
-        return orderRepository.save(order);
+        Orders result =  orderRepository.save(order);
+        if (result != null){
+
+        }
+
+         return result;
     }
 
     public Orders updateOrder(Long id, OrderRequest request) {
@@ -75,5 +81,21 @@ public class OrderService {
 
     public List<Orders> getCompletedOrders(Long userId) {
         return orderRepository.findByUserIdAndIsCompleted(userId, 1);
+    }
+
+
+    private  String getPaymentMethod(String name){
+
+        switch(name.toLowerCase())
+        {
+            case "cash":
+                return  "1";
+            case "bkash":
+                return  "2";
+            case "nagad":
+                return  "3";
+            default:
+                return "0";
+        }
     }
 }

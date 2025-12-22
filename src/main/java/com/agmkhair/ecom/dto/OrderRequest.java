@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class OrderRequest {
     private Long userId;
-    private Long paymentId;
+    private String paymentId;
 
     private String ipAddress;
     private String name;

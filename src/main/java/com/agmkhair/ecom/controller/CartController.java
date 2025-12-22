@@ -65,6 +65,19 @@ public class CartController {
         return APIResponseBuilder.success("Quantity updated", updated);
     }
 
+
+    @PutMapping
+    public APIResponse<Cart> update(@RequestBody UpdateCartRequest req) {
+
+        Cart updated = service.updateQuantity(req);
+
+        if (updated == null)
+            return APIResponseBuilder.failed("Cart item not found");
+
+        return APIResponseBuilder.success("Quantity updated", updated);
+    }
+
+
     // DELETE CART ITEM
     @DeleteMapping("/{id}")
     public APIResponse<Void> deleteCartItem(@PathVariable Long id) {

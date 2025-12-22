@@ -92,6 +92,17 @@ public class CartService {
                 }).orElse(null);
     }
 
+
+    public Cart updateOrder(Long id) {
+
+        return cartRepo.findById(id)
+                .map(cart -> {
+                    cart.setOrderId(Long.valueOf(1));
+                    return cartRepo.save(cart);
+                }).orElse(null);
+    }
+
+
     public boolean deleteCartItem(Long cartId) {
 
         if (!cartRepo.existsById(cartId)) return false;
