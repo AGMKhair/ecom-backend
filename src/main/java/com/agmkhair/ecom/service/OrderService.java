@@ -4,6 +4,7 @@ import com.agmkhair.ecom.dto.OrderRequest;
 import com.agmkhair.ecom.entity.Orders;
 import com.agmkhair.ecom.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+    @Autowired
+    CartService cartService;
+
 
     private final OrderRepository orderRepository;  // FIXED
 
@@ -36,7 +40,7 @@ public class OrderService {
 
         Orders result =  orderRepository.save(order);
         if (result != null){
-
+            cartService.updateOrder(request.getUserId(),result.getId());
         }
 
          return result;

@@ -29,7 +29,7 @@ public class CartController {
 
         if (cart != null )
         {
-          list = service.getCartByUser(req.getUserId());
+          list = service.getCartByUserAndOrderIdNULL(req.getUserId());
           return APIResponseBuilder.success("Added to cart", list);
         }
         return APIResponseBuilder.internalError("Try Again");
@@ -39,7 +39,7 @@ public class CartController {
     @GetMapping("/user/{id}")
     public APIResponse<List<CartResponse>> getByUser(@PathVariable Long id) {
 
-        List<CartResponse> list = service.getCartByUser(id);
+        List<CartResponse> list = service.getCartByUserAndOrderIdNULL(id);
 
         return APIResponseBuilder.success("Cart items fetched", list);
     }
@@ -48,13 +48,13 @@ public class CartController {
     @GetMapping("/user")
     public APIResponse<List<CartResponse>> getByUserQueryParam(@RequestParam Long id) {
 
-        List<CartResponse> list = service.getCartByUser(id);
+        List<CartResponse> list = service.getCartByUserAndOrderIdNULL(id);
 
         return APIResponseBuilder.success("Cart items fetched", list);
     }
 
     // UPDATE QUANTITY
-    @PutMapping
+    @PutMapping("/Quantity")
     public APIResponse<Cart> updateQuantity(@RequestBody UpdateCartRequest req) {
 
         Cart updated = service.updateQuantity(req);

@@ -8,6 +8,7 @@ import com.agmkhair.ecom.entity.Cart;
 import com.agmkhair.ecom.entity.Products;
 import com.agmkhair.ecom.repository.CartRepository;
 import com.agmkhair.ecom.repository.ItemRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class CartService {
 
     public Cart addToCart(AddCardRequest req) {
 
-        List<Cart> carts = cartRepo.findByUserIdAndProductId(req.getUserId(), req.getProductId());
+        List<Cart> carts = cartRepo.findByUserIdAndProductIdAndOrderIdIsNull(req.getUserId(), req.getProductId());
 
         if (!carts.isEmpty()) {
 
@@ -81,6 +82,33 @@ public class CartService {
         }).collect(Collectors.toList());
     }
 
+    public List<CartResponse> getCartByUserAndOrderIdNULL(Long userId) {
+
+        List<Cart> carts = cartRepo.findAllByUserIdAndOrderIdIsNull(userId).orElse(null);
+
+        return carts.stream().map(cart -> {
+            CartResponse dto = new CartResponse();
+
+            dto.setId(cart.getId());
+            dto.setQuantity(cart.getQuantity());
+            dto.setSize(cart.getSize());
+            dto.setColor(cart.getColor());
+
+            Products product = cart.getProducts();
+            if (product != null) {
+                ProductDTO productDTO = new ProductDTO();
+                productDTO.setId(product.getId());
+                productDTO.setName(product.getTitle());
+                productDTO.setPrice(product.getPrice());
+                productDTO.setImage(product.getImages());
+
+                dto.setProduct(productDTO);
+            }
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
 
 
     public Cart updateQuantity(UpdateCartRequest req) {
@@ -93,13 +121,12 @@ public class CartService {
     }
 
 
-    public Cart updateOrder(Long id) {
+    @Transactional
+    public String updateOrder(Long userId, Long orderId) {
 
-        return cartRepo.findById(id)
-                .map(cart -> {
-                    cart.setOrderId(Long.valueOf(1));
-                    return cartRepo.save(cart);
-                }).orElse(null);
+        int updated = cartRepo.updateOrderForUser(userId, orderId);
+
+        return updated > 0 ? "Done" : "No open carts found";
     }
 
 
