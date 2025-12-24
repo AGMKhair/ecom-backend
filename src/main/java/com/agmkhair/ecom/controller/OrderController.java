@@ -35,8 +35,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<Orders> get(@RequestParam Long id) {
-        return service.getOrder(id);
+    public APIResponse<List<Orders>> get(@RequestParam Long id) {
+        return APIResponseBuilder.success( "Order Details",service.getOrder(id));
     }
 
     @GetMapping("/all")
