@@ -3,6 +3,7 @@ package com.agmkhair.ecom.controller;
 import com.agmkhair.ecom.dto.APIResponse;
 import com.agmkhair.ecom.dto.APIResponseBuilder;
 import com.agmkhair.ecom.dto.OrderRequest;
+import com.agmkhair.ecom.dto.OrderResponse;
 import com.agmkhair.ecom.entity.Orders;
 import com.agmkhair.ecom.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public APIResponse<List<Orders>> get(@RequestParam Long id) {
+    public APIResponse<List<OrderResponse>> get(@RequestParam Long id) {
         return APIResponseBuilder.success( "Order Details",service.getOrder(id));
     }
 

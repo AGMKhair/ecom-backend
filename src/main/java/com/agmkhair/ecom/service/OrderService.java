@@ -1,12 +1,15 @@
 package com.agmkhair.ecom.service;
 
+import com.agmkhair.ecom.dto.CartResponse;
 import com.agmkhair.ecom.dto.OrderRequest;
+import com.agmkhair.ecom.dto.OrderResponse;
 import com.agmkhair.ecom.entity.Orders;
 import com.agmkhair.ecom.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -65,9 +68,32 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
-    public List<Orders> getOrder(Long userId) {
-        return orderRepository.findByUserId(userId)
+    public List<OrderResponse> getOrder(Long userId) {
+
+        List<Orders> orders = orderRepository
+                .findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Orders not found"));
+
+        List<OrderResponse> responseList = new ArrayList<>();
+
+
+        for (Orders order : orders) {
+
+            // 🔹 get cart items by orderId
+            List<CartResponse> items = cartService.getDetailsByOrderID(userId, order.getId());
+
+            // 🔹 map order → response
+            OrderResponse response = new OrderResponse();
+            response.setId(order.getId());
+            response.setUserId(order.getUserId());
+            response.setShippingAddress(order.getShippingAddress());
+            response.setTotalAmount(order.getTotalAmount());
+            response.setItems(items);
+
+            responseList.add(response);
+        }
+
+        return responseList;
     }
 
 

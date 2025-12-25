@@ -18,6 +18,8 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     Optional<List<Cart>> findAllByUserIdAndOrderIdIsNotNull(Long userId);
     Optional<List<Cart>> findAllByUserIdAndOrderIdIsNull(Long userId);
     List<Cart> findByUserIdAndOrderId(Long userId, Long productId);
+    Optional<List<Cart>>  findAllByUserIdAndOrderId(Long userId, Long orderId);
+
     @Modifying
     @Query("""
     UPDATE Cart c

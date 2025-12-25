@@ -6,8 +6,6 @@ import lombok.Data;
 public class CartResponse {
     private Long id;
     private Integer quantity;
-//    private BigDecimal rate;
-//    private BigDecimal totalAmt;
     private String size;
     private String color;
 
