@@ -35,6 +35,7 @@ public class OrderService {
         order.setShippingCharge(request.getShippingCharge());
         order.setPaidAmt(request.getPaidAmt());
         order.setAccountNo(request.getAccountNo());
+        order.setTransactionId(request.getTransactionId());
 
         // default values
         order.setIsPaid(0);

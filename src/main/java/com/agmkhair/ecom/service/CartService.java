@@ -50,6 +50,7 @@ public class CartService {
         cart.setQuantity(req.getQuantity());
         cart.setCreatedAt(LocalDateTime.now());
         cart.setUpdatedAt(LocalDateTime.now());
+        cart.setStatus(0);
 
         return cartRepo.save(cart);
     }

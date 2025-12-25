@@ -44,6 +44,8 @@ public class Cart {
 
     private String color;
 
+    private Integer status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private Products products;
