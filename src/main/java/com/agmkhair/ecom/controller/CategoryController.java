@@ -1,5 +1,7 @@
 package com.agmkhair.ecom.controller;
 
+import com.agmkhair.ecom.dto.APIResponse;
+import com.agmkhair.ecom.dto.APIResponseBuilder;
 import com.agmkhair.ecom.entity.Category;
 import com.agmkhair.ecom.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +38,13 @@ public class CategoryController {
     }
 
     @PostMapping("/add")
-    public Category addCategory(@RequestBody Category req) {
+    public APIResponse<Category> addCategory(@RequestBody Category req) {
 
-        return service.addMenu(
+        return APIResponseBuilder.success("Added Successfully",service.addMenu(
                 req.getTitle(),
                 req.getParentId(),
                 req.getSubParentId()
-        );
+        ));
     }
 
 }
