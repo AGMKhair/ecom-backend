@@ -24,13 +24,12 @@ public class BrandController {
         return  APIResponseBuilder.success("Added Successfully",service.create(b)); }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Brand> update(@PathVariable Long id, @RequestBody Brand b) {
-        Brand updated = service.update(id, b);
-        return updated == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(updated);
+    public APIResponse<Brand> update(@PathVariable Long id, @RequestBody Brand b) {
+        return APIResponseBuilder.success("Update Successfully",service.update(id, b));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        return service.delete(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    public APIResponse<?> delete(@PathVariable Long id) {
+        return  APIResponseBuilder.success("Delete Done",service.delete(id));
     }
 }
