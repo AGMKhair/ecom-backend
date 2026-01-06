@@ -1,5 +1,7 @@
 package com.agmkhair.ecom.controller;
 
+import com.agmkhair.ecom.dto.APIResponse;
+import com.agmkhair.ecom.dto.APIResponseBuilder;
 import com.agmkhair.ecom.entity.Brand;
 import com.agmkhair.ecom.service.BrandService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,8 @@ public class BrandController {
     public List<Brand> all() { return service.all(); }
 
     @PostMapping
-    public Brand create(@RequestBody Brand b) { return service.create(b); }
+    public APIResponse<Brand> create(@RequestBody Brand b) {
+        return  APIResponseBuilder.success("Added Successfully",service.create(b)); }
 
     @PutMapping("/{id}")
     public ResponseEntity<Brand> update(@PathVariable Long id, @RequestBody Brand b) {
