@@ -3,6 +3,7 @@ package com.agmkhair.ecom.exception;
 import com.agmkhair.ecom.dto.*;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -26,5 +27,10 @@ public class GlobalExceptionHandler {
     public APIResponse<?> handleGlobal(Exception ex) {
         ex.printStackTrace();
         return APIResponseBuilder.internalError("Something went wrong! " +  ex.getMessage());
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public APIResponse<?> handleMaxSize(MaxUploadSizeExceededException ex) {
+        return APIResponseBuilder.failed("Image size exceeds maximum limit (10MB)");
     }
 }

@@ -10,6 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/product_images/**")
+                .addResourceLocations("file:product_images/")
                 .addResourceLocations("file:/Applications/XAMPP/xamppfiles/htdocs/product_images/");
     }
 }
