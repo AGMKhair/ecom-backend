@@ -4,51 +4,104 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
+import java.text.Normalizer;
+import java.util.Locale;
 import java.util.UUID;
 
 @Service
 public class StorageService {
 
-    private final Path root = Paths.get("/Applications/XAMPP/xamppfiles/htdocs/product_images");
+    private final Path root = Paths.get("product_images");
 
     public StorageService() {
         try {
             Files.createDirectories(root);
         } catch (IOException e) {
-            throw new RuntimeException("Could not initialize folder for upload!");
+            throw new RuntimeException("Could not initialize root upload folder", e);
         }
     }
 
-    public String store(MultipartFile file) {
-        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+    // ===============================
+    // STORE IMAGE INSIDE PRODUCT FOLDER
+    // ===============================
+    public String store(MultipartFile file, String productTitle) {
+
+        String safeFolder = toSafeFolderName(productTitle);
+        Path productDir = root.resolve(safeFolder);
 
         try {
-            Files.copy(file.getInputStream(), this.root.resolve(filename),
-                    StandardCopyOption.REPLACE_EXISTING);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to store file " + filename, e);
-        }
+            Files.createDirectories(productDir);
 
-        return filename;
+            String filename =
+                    UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+            Path destination = productDir.resolve(filename);
+
+            Files.copy(
+                    file.getInputStream(),
+                    destination,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+
+            // 👉 DB-তে save হবে relative path
+            return safeFolder + "/" + filename;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store image", e);
+        }
     }
 
-    public boolean delete(String filename) {
+    // ===============================
+    // DELETE SINGLE IMAGE
+    // ===============================
+    public boolean delete(String relativePath) {
         try {
-            Path filePath = root.resolve(filename);
+            Path filePath = root.resolve(relativePath);
 
             if (Files.exists(filePath)) {
                 Files.delete(filePath);
                 return true;
-            } else {
-                return false; // file not found
             }
+            return false;
+
         } catch (IOException e) {
-            throw new RuntimeException("Failed to delete file " + filename, e);
+            throw new RuntimeException("Failed to delete file " + relativePath, e);
         }
     }
-}
 
+    // ===============================
+    // DELETE FULL PRODUCT FOLDER (optional)
+    // ===============================
+    public void deleteProductFolder(String productTitle) {
+        String safeFolder = toSafeFolderName(productTitle);
+        Path productDir = root.resolve(safeFolder);
+
+        if (!Files.exists(productDir)) return;
+
+        try {
+            Files.walk(productDir)
+                    .sorted((a, b) -> b.compareTo(a)) // delete files first
+                    .forEach(path -> {
+                        try {
+                            Files.delete(path);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to delete product folder", e);
+        }
+    }
+
+    // ===============================
+    // TITLE → SAFE FOLDER NAME
+    // ===============================
+    private String toSafeFolderName(String input) {
+        return Normalizer.normalize(input, Normalizer.Form.NFD)
+                .replaceAll("[^\\w\\s-]", "")
+                .trim()
+                .replaceAll("\\s+", "-")
+                .toLowerCase(Locale.ENGLISH);
+    }
+}

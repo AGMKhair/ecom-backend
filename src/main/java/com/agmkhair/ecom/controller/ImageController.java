@@ -2,6 +2,7 @@ package com.agmkhair.ecom.controller;
 
 import com.agmkhair.ecom.dto.APIResponse;
 import com.agmkhair.ecom.dto.APIResponseBuilder;
+import com.agmkhair.ecom.utils.CommonUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +36,7 @@ public APIResponse<String> uploadImage(
 
     return APIResponseBuilder.success(
             "Image uploaded",
-            "http://127.0.0.1:8888/product_images/" + fileName
+            CommonUtils.IMAGE_URL + fileName
     );
 }
 

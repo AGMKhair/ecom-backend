@@ -1,9 +1,11 @@
 package com.agmkhair.ecom.service;
 
+import com.agmkhair.ecom.dto.ProductCreateRequest;
 import com.agmkhair.ecom.entity.Products;
 import com.agmkhair.ecom.entity.ItemImage;
 import com.agmkhair.ecom.repository.ItemImageRepository;
 import com.agmkhair.ecom.repository.ItemRepository;
+import com.agmkhair.ecom.utils.CommonUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,16 +40,21 @@ public class ItemService {
     }
 
     @Transactional
-    public Products createItem(Products products, MultipartFile[] images) {
-        products.setCreatedAt(LocalDateTime.now());
-        Products saved = itemRepo.save(products);
+    public Products createItem(
+            ProductCreateRequest request,
+            MultipartFile[] images
+    ) {
 
-        if (images != null) {
+        Products product = mapToEntity(request);
+
+        Products saved = itemRepo.save(product);
+
+        if (images != null && images.length > 0) {
             List<ItemImage> list = new ArrayList<>();
             for (MultipartFile f : images) {
-                String filename = storage.store(f);
+                String filename = storage.store(f,request.getTitle());
                 ItemImage img = new ItemImage();
-                img.setImage(filename);
+                img.setImage(CommonUtils.IMAGE_URL+filename);
                 img.setProduct(saved);
                 img.setCreatedAt(LocalDateTime.now());
                 imageRepo.save(img);
@@ -84,7 +91,7 @@ public class ItemService {
             // Add new images if provided
             if (images != null) {
                 for (MultipartFile f : images) {
-                    String filename = storage.store(f);
+                    String filename = storage.store(f, updated.getTitle());
                     ItemImage img = new ItemImage();
                     img.setImage(filename);
                     img.setProduct(products);
@@ -112,4 +119,35 @@ public class ItemService {
     public List<ItemImage> getImages(Long itemId) {
         return imageRepo.findByProductId(itemId);
     }
+
+    private Products mapToEntity(ProductCreateRequest req) {
+        Products p = new Products();
+
+        p.setId(req.getId()); // null হলে create, না হলে update
+        p.setBrandId(req.getBrandId());
+        p.setCategoryId(req.getCategoryId());
+
+        p.setTitle(req.getTitle());
+        p.setDescription(req.getDescription());
+
+        p.setQuantity(req.getQuantity());
+        p.setUnit(req.getUnit());
+
+        p.setPrice(req.getPrice());
+        p.setOfferPrice(req.getOfferPrice());
+
+        p.setStatus(req.getStatus());
+
+        // ---- defaults / system fields ----
+        p.setSlug(
+                req.getTitle()
+                        .toLowerCase()
+                        .replaceAll("[^a-z0-9]+", "-")
+        );
+
+        p.setCreatedAt(LocalDateTime.now());
+
+        return p;
+    }
+
 }

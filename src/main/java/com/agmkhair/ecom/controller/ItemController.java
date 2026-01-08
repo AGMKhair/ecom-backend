@@ -1,9 +1,13 @@
 package com.agmkhair.ecom.controller;
 
+import com.agmkhair.ecom.dto.APIResponse;
+import com.agmkhair.ecom.dto.APIResponseBuilder;
+import com.agmkhair.ecom.dto.ProductCreateRequest;
 import com.agmkhair.ecom.entity.Products;
 import com.agmkhair.ecom.entity.ItemImage;
 import com.agmkhair.ecom.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,11 +31,20 @@ public class ItemController {
         return products == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(products);
     }
 
-    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
-    public ResponseEntity<Products> create(@RequestPart("item") Products products,
-                                           @RequestPart(value = "images", required = false) MultipartFile[] images) {
-        Products saved = service.createItem(products, images);
-        return ResponseEntity.ok(saved);
+ //    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
+//    public APIResponse<Products> create(@RequestPart("item") Products products,
+//                                        @RequestPart(value = "images", required = false) MultipartFile[] images) {
+//        Products saved = service.createItem(products, images);
+//        return APIResponseBuilder.success("Added Successfully",saved);
+//    }
+
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public APIResponse<Products> create(
+            @RequestPart("item") ProductCreateRequest req,
+            @RequestPart(value = "images", required = false) MultipartFile[] images
+    ) {
+        Products saved = service.createItem(req, images);
+        return APIResponseBuilder.success("Added Successfully", saved);
     }
 
     @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
