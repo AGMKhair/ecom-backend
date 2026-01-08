@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,10 +74,17 @@ public class CartService {
             if (product != null) {
                 ProductDTO productDTO = new ProductDTO();
                 productDTO.setId(product.getId());
-                productDTO.setName(product.getTitle());
+                productDTO.setTitle(product.getTitle());
                 productDTO.setPrice(product.getPrice());
-                productDTO.setImage(product.getImages());
-
+                productDTO.setImages(product.getImages());
+                List<String> sizes = product.getSizes() != null
+                        ? Arrays.asList(product.getSizes().split(","))
+                        : new ArrayList<>();
+                productDTO.setSizes(sizes);
+                List<String> colors = product.getColors() != null
+                        ? Arrays.asList(product.getColors().split(","))
+                        : new ArrayList<>();
+                productDTO.setColors(colors);
                 dto.setProduct(productDTO);
             }
 
@@ -99,9 +108,9 @@ public class CartService {
             if (product != null) {
                 ProductDTO productDTO = new ProductDTO();
                 productDTO.setId(product.getId());
-                productDTO.setName(product.getTitle());
+                productDTO.setTitle(product.getTitle());
                 productDTO.setPrice(product.getPrice());
-                productDTO.setImage(product.getImages());
+                productDTO.setImages(product.getImages());
 
                 dto.setProduct(productDTO);
             }
@@ -125,9 +134,9 @@ public class CartService {
             if (product != null) {
                 ProductDTO productDTO = new ProductDTO();
                 productDTO.setId(product.getId());
-                productDTO.setName(product.getTitle());
+                productDTO.setTitle(product.getTitle());
                 productDTO.setPrice(product.getPrice());
-                productDTO.setImage(product.getImages());
+                productDTO.setImages(product.getImages());
 
                 dto.setProduct(productDTO);
             }

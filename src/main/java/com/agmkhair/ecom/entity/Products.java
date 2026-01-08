@@ -59,6 +59,13 @@ public class Products {
 
     private String featured;
 
+    @Column(name = "sizes")
+    private String sizes;   // "S,M,L,XL"
+
+    @Column(name = "colors")
+    private String colors;  // "Red,Blue,Black"
+
+
     private Integer priority;
 
     @Column(name = "offer_product")

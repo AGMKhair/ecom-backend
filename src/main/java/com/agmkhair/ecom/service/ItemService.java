@@ -1,6 +1,7 @@
 package com.agmkhair.ecom.service;
 
 import com.agmkhair.ecom.dto.ProductCreateRequest;
+import com.agmkhair.ecom.dto.ProductDTO;
 import com.agmkhair.ecom.entity.Products;
 import com.agmkhair.ecom.entity.ItemImage;
 import com.agmkhair.ecom.repository.ItemImageRepository;
@@ -27,9 +28,15 @@ public class ItemService {
         return itemRepo.findById(id).orElse(null);
     }
 
-    public List<Products> getAll() {
-        return itemRepo.findAll();
+    public List<ProductDTO> getAll() {
+
+        List<Products> productsList = itemRepo.findAll();
+
+        return productsList.stream()
+                .map(this::toDTO)   // entity → dto
+                .toList();
     }
+
 
     public List<Products> getByCategory(Long categoryId) {
         return itemRepo.findByCategoryIdOrderByPriorityAsc(categoryId);
@@ -136,18 +143,57 @@ public class ItemService {
         p.setPrice(req.getPrice());
         p.setOfferPrice(req.getOfferPrice());
 
-        p.setStatus(req.getStatus());
+        p.setPrice(req.getPrice());
+        p.setOldPrice(req.getOldPrice());
+        p.setOfferPrice(req.getOfferPrice());
 
-        // ---- defaults / system fields ----
-        p.setSlug(
-                req.getTitle()
-                        .toLowerCase()
-                        .replaceAll("[^a-z0-9]+", "-")
+        p.setStatus(req.getStatus());
+        p.setFeatured(req.getFeatured());
+        p.setPriority(req.getPriority());
+        p.setFreeShipment(req.getFreeShipment());
+
+        p.setSizes(
+                req.getSizes() != null
+                        ? String.join(",", req.getSizes())
+                        : null
         );
 
-        p.setCreatedAt(LocalDateTime.now());
+        p.setColors(
+                req.getColors() != null
+                        ? String.join(",", req.getColors())
+                        : null
+        );
+
 
         return p;
     }
+
+
+    public ProductDTO toDTO(Products p) {
+
+        ProductDTO dto = new ProductDTO();
+
+        dto.setId(p.getId());
+        dto.setBrandId(p.getBrandId());
+        dto.setCategoryId(p.getCategoryId());
+
+        dto.setTitle(p.getTitle());
+        dto.setDescription(p.getDescription());
+
+        dto.setQuantity(p.getQuantity());
+        dto.setPrice(p.getPrice());
+        dto.setOldPrice(p.getOldPrice());
+
+        dto.setStatus(p.getStatus());
+
+        dto.setImages(p.getImages());
+
+        /// 🔥 String → List conversion
+        dto.setSizesFromString(p.getSizes());
+        dto.setColorsFromString(p.getColors());
+
+        return dto;
+    }
+
 
 }

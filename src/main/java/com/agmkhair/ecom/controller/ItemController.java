@@ -3,6 +3,7 @@ package com.agmkhair.ecom.controller;
 import com.agmkhair.ecom.dto.APIResponse;
 import com.agmkhair.ecom.dto.APIResponseBuilder;
 import com.agmkhair.ecom.dto.ProductCreateRequest;
+import com.agmkhair.ecom.dto.ProductDTO;
 import com.agmkhair.ecom.entity.Products;
 import com.agmkhair.ecom.entity.ItemImage;
 import com.agmkhair.ecom.service.ItemService;
@@ -21,7 +22,7 @@ public class ItemController {
     private final ItemService service;
 
     @GetMapping
-    public List<Products> all() {
+    public List<ProductDTO> all() {
         return service.getAll();
     }
 
