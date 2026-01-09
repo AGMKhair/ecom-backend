@@ -72,37 +72,8 @@ public class CategoryService {
     }
 
 
-    public Category addMenu(String title, Long parentId, Long subParentId) {
-
-        // 1. Determine the next priority for this level
-        Long nextPriority = categoryRepository.getMaxPriority(parentId, subParentId) + 1;
-
-        Category category = new Category();
-        category.setTitle(title);
-
-        // 2. Main menu
-        if (parentId == null && subParentId == null) {
-            category.setParentId(null);
-            category.setSubParentId(null);
-        }
-
-        // 3. Sub menu
-        else if (parentId != null && subParentId == null) {
-            category.setParentId(parentId);
-            category.setSubParentId(null);
-        }
-
-        // 4. Sub–Sub menu
-        else if (parentId != null && subParentId != null) {
-            category.setParentId(parentId);
-            category.setSubParentId(subParentId);
-        }
-
-        // 5. Set priority
-        category.setPriority(nextPriority);
-
-        // 6. Save
-        return categoryRepository.save(category);
+    public Category addMenu(Category value) {
+        return categoryRepository.save(value);
     }
 
 }

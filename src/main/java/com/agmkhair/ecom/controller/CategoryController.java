@@ -40,11 +40,7 @@ public class CategoryController {
     @PostMapping("/add")
     public APIResponse<Category> addCategory(@RequestBody Category req) {
 
-        return APIResponseBuilder.success("Added Successfully",service.addMenu(
-                req.getTitle(),
-                req.getParentId(),
-                req.getSubParentId()
-        ));
+        return APIResponseBuilder.success("Added Successfully",service.addMenu(req));
     }
 
 }
