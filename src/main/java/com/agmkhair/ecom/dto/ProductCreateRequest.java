@@ -30,6 +30,7 @@ public class ProductCreateRequest {
     // Extra Attributes
     private List<String> sizes;   // S, M, L, XL
     private List<String> colors;  // red, blue, black
+    private List<String> existingImages;  // url
 
     // Flags
     private Boolean freeShipment;

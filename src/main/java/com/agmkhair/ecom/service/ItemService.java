@@ -73,41 +73,68 @@ public class ItemService {
     }
 
     @Transactional
-    public Products updateItem(Long id, ProductCreateRequest updated, MultipartFile[] images) {
-        return itemRepo.findById(id).map(products -> {
-            products.setTitle(updated.getTitle());
-            products.setDescription(updated.getDescription());
-//            products.setSlug(updated.getSlug());
-            products.setQuantity(updated.getQuantity());
-            products.setUnit(updated.getUnit());
-            products.setPrice(updated.getPrice());
-//            products.setPriceSar(updated.getPriceSar());
-            products.setFreeShipment(updated.getFreeShipment());
-            products.setStatus(updated.getStatus());
-            products.setOfferPrice(updated.getOfferPrice());
-            products.setOldPrice(updated.getOldPrice());
-//            products.setOldPriceSar(updated.getOldPriceSar());
-            products.setFeatured(updated.getFeatured());
-            products.setPriority(updated.getPriority());
-//            products.setOfferProduct(updated.getOfferProduct());
-//            products.setAdmin(updated.getAdmin());
-            products.setBrandId(updated.getBrandId());
-            products.setCategoryId(updated.getCategoryId());
-            products.setUpdatedAt(LocalDateTime.now());
+    public Products updateItem(
+            Long id,
+            ProductCreateRequest updated,
+            MultipartFile[] images
+    ) {
+        Products product = itemRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
-            // Add new images if provided
-            if (images != null) {
-                for (MultipartFile f : images) {
-                    String filename = storage.store(f, updated.getTitle());
-                    ItemImage img = new ItemImage();
-                    img.setImage(filename);
-                    img.setProduct(products);
-                    img.setCreatedAt(LocalDateTime.now());
-                    imageRepo.save(img);
+        // ================= BASIC FIELD UPDATE =================
+        product.setTitle(updated.getTitle());
+        product.setDescription(updated.getDescription());
+        product.setPrice(updated.getPrice());
+        product.setOldPrice(updated.getOldPrice());
+        product.setQuantity(updated.getQuantity());
+        product.setStatus(updated.getStatus());
+        product.setBrandId(updated.getBrandId());
+        product.setCategoryId(updated.getCategoryId());
+        product.setSizes(
+                updated.getSizes() != null
+                        ? String.join(",", updated.getSizes())
+                        : null
+        );
+
+        product.setColors(
+                updated.getColors() != null
+                        ? String.join(",", updated.getColors())
+                        : null
+        );
+        product.setUpdatedAt(LocalDateTime.now());
+
+        // ================= IMAGE DELETE (CRITICAL PART) =================
+        if (updated.getExistingImages() != null) {
+
+            List<ItemImage> dbImages = imageRepo.findByProductId(id);
+
+            for (ItemImage img : dbImages) {
+                // UI থেকে পাঠানো list এ যদি না থাকে → delete
+                if (!updated.getExistingImages().contains(img.getImage())) {
+
+                    storage.delete(img.getImage());
+
+                    imageRepo.delete(img);
                 }
             }
-            return itemRepo.save(products);
-        }).orElse(null);
+        }
+
+        // ================= ADD NEW IMAGES =================
+
+        if (images != null && images.length > 0) {
+            List<ItemImage> list = new ArrayList<>();
+            for (MultipartFile f : images) {
+                String filename = storage.store(f,product.getTitle());
+                ItemImage img = new ItemImage();
+                img.setImage(CommonUtils.IMAGE_URL+filename);
+                img.setProduct(product);
+                img.setCreatedAt(LocalDateTime.now());
+                imageRepo.save(img);
+                list.add(img);
+            }
+        }
+
+        return itemRepo.save(product);
     }
 
     @Transactional
