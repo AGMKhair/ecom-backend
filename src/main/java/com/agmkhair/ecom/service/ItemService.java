@@ -73,24 +73,24 @@ public class ItemService {
     }
 
     @Transactional
-    public Products updateItem(Long id, Products updated, MultipartFile[] images) {
+    public Products updateItem(Long id, ProductCreateRequest updated, MultipartFile[] images) {
         return itemRepo.findById(id).map(products -> {
             products.setTitle(updated.getTitle());
             products.setDescription(updated.getDescription());
-            products.setSlug(updated.getSlug());
+//            products.setSlug(updated.getSlug());
             products.setQuantity(updated.getQuantity());
             products.setUnit(updated.getUnit());
             products.setPrice(updated.getPrice());
-            products.setPriceSar(updated.getPriceSar());
+//            products.setPriceSar(updated.getPriceSar());
             products.setFreeShipment(updated.getFreeShipment());
             products.setStatus(updated.getStatus());
             products.setOfferPrice(updated.getOfferPrice());
             products.setOldPrice(updated.getOldPrice());
-            products.setOldPriceSar(updated.getOldPriceSar());
+//            products.setOldPriceSar(updated.getOldPriceSar());
             products.setFeatured(updated.getFeatured());
             products.setPriority(updated.getPriority());
-            products.setOfferProduct(updated.getOfferProduct());
-            products.setAdmin(updated.getAdmin());
+//            products.setOfferProduct(updated.getOfferProduct());
+//            products.setAdmin(updated.getAdmin());
             products.setBrandId(updated.getBrandId());
             products.setCategoryId(updated.getCategoryId());
             products.setUpdatedAt(LocalDateTime.now());
@@ -112,16 +112,20 @@ public class ItemService {
 
     @Transactional
     public boolean deleteItem(Long id) {
-        return itemRepo.findById(id).map(products -> {
-            List<ItemImage> imgs = imageRepo.findByProductId(id);
-            for (ItemImage im : imgs) {
-                storage.delete(im.getImage());
+        return itemRepo.findById(id).map(product -> {
+
+            // 🔹 delete physical files ONLY
+            for (ItemImage img : product.getImages()) {
+                storage.delete(img.getImage());
             }
-            imageRepo.deleteAll(imgs);
-            itemRepo.delete(products);
+
+            // 🔹 let Hibernate handle DB delete (cascade)
+            itemRepo.delete(product);
+
             return true;
         }).orElse(false);
     }
+
 
     public List<ItemImage> getImages(Long itemId) {
         return imageRepo.findByProductId(itemId);

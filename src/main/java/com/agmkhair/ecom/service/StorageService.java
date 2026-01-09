@@ -55,20 +55,22 @@ public class StorageService {
     // ===============================
     // DELETE SINGLE IMAGE
     // ===============================
-    public boolean delete(String relativePath) {
+    public boolean delete(String image) {
         try {
-            Path filePath = root.resolve(relativePath);
+            if (image.startsWith("http")) {
+                image = image.substring(image.indexOf("/product_images/") + 16);
+            }
 
+            Path filePath = root.resolve(image);
             if (Files.exists(filePath)) {
                 Files.delete(filePath);
-                return true;
             }
-            return false;
-
+            return true;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to delete file " + relativePath, e);
+            throw new RuntimeException(e);
         }
     }
+
 
     // ===============================
     // DELETE FULL PRODUCT FOLDER (optional)

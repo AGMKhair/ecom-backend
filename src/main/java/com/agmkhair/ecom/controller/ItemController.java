@@ -48,17 +48,18 @@ public class ItemController {
         return APIResponseBuilder.success("Added Successfully", saved);
     }
 
-    @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<Products> update(@PathVariable Long id,
-                                           @RequestPart("item") Products products,
-                                           @RequestPart(value = "images", required = false) MultipartFile[] images) {
-        Products saved = service.updateItem(id, products, images);
-        return saved == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(saved);
+    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Products> update(
+            @PathVariable Long id,
+            @RequestPart("item") ProductCreateRequest req,
+            @RequestPart(value = "images", required = false) MultipartFile[] images
+    ) {
+        Products saved = service.updateItem(id, req, images);
+        return ResponseEntity.ok(saved);
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        return service.deleteItem(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    @DeleteMapping("/delete/{id}")
+    public APIResponse<Boolean> delete(@PathVariable Long id) {
+        return  APIResponseBuilder.success("Delete Done",service.deleteItem(id));
     }
 
     @GetMapping("/{id}/images")
