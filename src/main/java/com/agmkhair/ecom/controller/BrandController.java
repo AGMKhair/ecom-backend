@@ -5,7 +5,6 @@ import com.agmkhair.ecom.dto.APIResponseBuilder;
 import com.agmkhair.ecom.entity.Brand;
 import com.agmkhair.ecom.service.BrandService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
