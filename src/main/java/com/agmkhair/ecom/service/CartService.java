@@ -147,14 +147,21 @@ public class CartService {
 
 
 
-    public Cart updateQuantity(UpdateCartRequest req) {
+    public CartResponse updateQuantity(UpdateCartRequest req) {
 
         return cartRepo.findById(req.getCartId())
                 .map(cart -> {
                     cart.setQuantity(req.getQuantity());
-                    return cartRepo.save(cart);
+                    cartRepo.save(cart);
+
+                    CartResponse dto = new CartResponse();
+                    dto.setId(cart.getId());
+                    dto.setQuantity(cart.getQuantity());
+
+                    return dto;
                 }).orElse(null);
     }
+
 
 
     @Transactional

@@ -55,9 +55,9 @@ public class CartController {
 
     // UPDATE QUANTITY
     @PutMapping("/Quantity")
-    public APIResponse<Cart> updateQuantity(@RequestBody UpdateCartRequest req) {
+    public APIResponse<CartResponse> updateQuantity(@RequestBody UpdateCartRequest req) {
 
-        Cart updated = service.updateQuantity(req);
+        CartResponse updated = service.updateQuantity(req);
 
         if (updated == null)
             return APIResponseBuilder.failed("Cart item not found");
@@ -67,9 +67,9 @@ public class CartController {
 
 
     @PutMapping
-    public APIResponse<Cart> update(@RequestBody UpdateCartRequest req) {
+    public APIResponse<CartResponse> update(@RequestBody UpdateCartRequest req) {
 
-        Cart updated = service.updateQuantity(req);
+        CartResponse updated = service.updateQuantity(req);
 
         if (updated == null)
             return APIResponseBuilder.failed("Cart item not found");
