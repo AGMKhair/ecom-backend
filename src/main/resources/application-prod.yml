@@ -3,8 +3,8 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ecom?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: root
+    url: jdbc:mysql://mysql:3306/ecom?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ecom_user
     password: Sabbir@222
     driver-class-name: com.mysql.cj.jdbc.Driver
 
