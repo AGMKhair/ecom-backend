@@ -2,3 +2,11 @@
 cd /opt/apps/ecom
 docker compose down
 docker compose up -d --build
+
+docker logs -f ecom-backend
+
+# Jar bulid
+./gradlew clean bootJar
+
+-- M-Sabbir@222
+-- ecom
