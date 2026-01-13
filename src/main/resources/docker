@@ -1,0 +1,4 @@
+# Service Down and run again
+cd /opt/apps/ecom
+docker compose down
+docker compose up -d --build
