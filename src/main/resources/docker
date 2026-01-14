@@ -10,3 +10,17 @@ docker logs -f ecom-backend
 
 -- M-Sabbir@222
 -- ecom
+
+
+# Backend update
+docker compose build backend
+docker compose up -d backend
+
+# Frontend update
+docker compose build frontend
+docker compose up -d frontend
+
+
+docker compose restart mysql
+docker compose restart backend
+docker compose restart frontend
