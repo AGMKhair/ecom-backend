@@ -33,8 +33,8 @@ public class CategoryController {
     }
 
     @GetMapping("/all")
-    public List<Map<String, Object>> getFullMenuTree() {
-        return service.getFullMenuTree();
+    public APIResponse<List<Map<String, Object>>> getFullMenuTree() {
+        return APIResponseBuilder.success("All Category",  service.getFullMenuTree());
     }
 
     @PostMapping("/add")
