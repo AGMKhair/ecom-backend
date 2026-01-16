@@ -1,9 +1,6 @@
 package com.agmkhair.ecom.controller;
 
-import com.agmkhair.ecom.dto.APIResponse;
-import com.agmkhair.ecom.dto.APIResponseBuilder;
-import com.agmkhair.ecom.dto.OrderRequest;
-import com.agmkhair.ecom.dto.OrderResponse;
+import com.agmkhair.ecom.dto.*;
 import com.agmkhair.ecom.entity.Orders;
 import com.agmkhair.ecom.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +39,7 @@ public class OrderController {
     }
 
     @GetMapping("/all")
-    public APIResponse<List<Orders>> all() {
+    public APIResponse<AllOrdersResponse> all() {
         return APIResponseBuilder.success( "All Order",service.getAllOrders());
     }
 

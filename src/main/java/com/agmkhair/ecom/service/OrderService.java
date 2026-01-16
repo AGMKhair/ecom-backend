@@ -1,5 +1,6 @@
 package com.agmkhair.ecom.service;
 
+import com.agmkhair.ecom.dto.AllOrdersResponse;
 import com.agmkhair.ecom.dto.CartResponse;
 import com.agmkhair.ecom.dto.OrderRequest;
 import com.agmkhair.ecom.dto.OrderResponse;
@@ -99,8 +100,42 @@ public class OrderService {
     }
 
 
-    public List<Orders> getAllOrders() {
-        return orderRepository.findAll();
+    public AllOrdersResponse getAllOrders() {
+
+        List<Orders> orders = orderRepository.findAll();
+
+        // ✅ Initialize response
+        AllOrdersResponse response = new AllOrdersResponse();
+
+        // ✅ Initialize lists
+        List<Orders> pendingOrders = new ArrayList<>();
+        List<Orders> completeOrders = new ArrayList<>();
+        List<Orders> cancelOrders = new ArrayList<>();
+        List<Orders> paidOrders = new ArrayList<>();
+
+        // ✅ Categorize orders
+        for (Orders o : orders) {
+            switch (o.getIsCompleted()) {
+                case 0 -> pendingOrders.add(o);     // Pending
+                case 1 -> completeOrders.add(o);    // Completed
+                case 2 -> paidOrders.add(o);        // Paid (example)
+                case 99 -> cancelOrders.add(o);     // Cancelled
+            }
+        }
+
+        // ✅ Set lists
+        response.setPendingOrder(pendingOrders);
+        response.setCompleteOrder(completeOrders);
+        response.setCancelOrder(cancelOrders);
+        response.setPaidOrder(paidOrders);
+
+        // ✅ Set totals
+        response.setTotalOrder(orders.size());
+        response.setTotalPendingOrder(pendingOrders.size());
+        response.setTotalDeliveredOrder(completeOrders.size());
+        response.setTotalCancelOrder(cancelOrders.size());
+
+        return response;
     }
 
     public List<Orders> getUnpaidOrders(Long userId) {
