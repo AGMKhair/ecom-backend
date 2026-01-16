@@ -91,6 +91,7 @@ public class OrderService {
             response.setUserId(order.getUserId());
             response.setShippingAddress(order.getShippingAddress());
             response.setTotalAmount(order.getTotalAmount());
+            response.setStatus(order.getIsCompleted());
             response.setItems(items);
 
             responseList.add(response);

@@ -15,6 +15,7 @@ public class OrderResponse {
     private String name;
     private String paymentMethod;
     private Double totalAmount;
+    private int status;
     private List<CartResponse> items;
 }
 
