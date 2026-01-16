@@ -11,6 +11,8 @@ import java.util.List;
 public class AllOrdersResponse {
     private List<Orders> pendingOrder;
     private List<Orders> completeOrder;
+    private List<Orders> returnOrder;
+    private List<Orders> deliveredOrder;
     private List<Orders> cancelOrder;
     private List<Orders> paidOrder;
 
@@ -18,4 +20,7 @@ public class AllOrdersResponse {
     private int totalPendingOrder;
     private int totalDeliveredOrder;
     private int totalCancelOrder;
+    private int totalCompleteOrder;
+    private int totalPaidOrder;
+    private int totalReturnOrder;
 }

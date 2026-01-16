@@ -111,28 +111,36 @@ public class OrderService {
         List<Orders> pendingOrders = new ArrayList<>();
         List<Orders> completeOrders = new ArrayList<>();
         List<Orders> cancelOrders = new ArrayList<>();
+        List<Orders> deliveredOrder = new ArrayList<>();
+        List<Orders> returnOrders = new ArrayList<>();
         List<Orders> paidOrders = new ArrayList<>();
 
         // ✅ Categorize orders
         for (Orders o : orders) {
             switch (o.getIsCompleted()) {
                 case 0 -> pendingOrders.add(o);     // Pending
-                case 1 -> completeOrders.add(o);    // Completed
-                case 2 -> paidOrders.add(o);        // Paid (example)
+                case 1 -> deliveredOrder.add(o);    // Completed
+                case 2 -> returnOrders.add(o);        // Paid (example)
+                case 3 -> completeOrders.add(o);        // Paid (example)
                 case 99 -> cancelOrders.add(o);     // Cancelled
             }
         }
 
         // ✅ Set lists
         response.setPendingOrder(pendingOrders);
+        response.setDeliveredOrder(deliveredOrder);
+        response.setReturnOrder(returnOrders);
         response.setCompleteOrder(completeOrders);
         response.setCancelOrder(cancelOrders);
-        response.setPaidOrder(paidOrders);
+        response.setPaidOrder(completeOrders);
 
         // ✅ Set totals
         response.setTotalOrder(orders.size());
         response.setTotalPendingOrder(pendingOrders.size());
-        response.setTotalDeliveredOrder(completeOrders.size());
+        response.setTotalDeliveredOrder(deliveredOrder.size());
+        response.setTotalReturnOrder(returnOrders.size());
+        response.setTotalCompleteOrder(completeOrders.size());
+        response.setTotalPaidOrder(completeOrders.size());
         response.setTotalCancelOrder(cancelOrders.size());
 
         return response;
