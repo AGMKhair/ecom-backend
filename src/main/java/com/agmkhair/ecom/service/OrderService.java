@@ -4,6 +4,7 @@ import com.agmkhair.ecom.dto.CartResponse;
 import com.agmkhair.ecom.dto.OrderRequest;
 import com.agmkhair.ecom.dto.OrderResponse;
 import com.agmkhair.ecom.entity.Orders;
+import com.agmkhair.ecom.exception.ResourceNotFoundException;
 import com.agmkhair.ecom.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +114,26 @@ public class OrderService {
     public List<Orders> getCompletedOrders(Long userId) {
         return orderRepository.findByUserIdAndIsCompleted(userId, 1);
     }
+
+
+
+///  Admin Section
+
+    public String orderStatusUpdate(int status) {
+        orderRepository.saveIsCompleted(status);
+        return "Order status updated successfully";
+    }
+
+
+    public void updateOrderStatus(Long orderId, int status) {
+        int updated = orderRepository.updateOrderStatus(orderId, status);
+
+        if (updated == 0) {
+            throw new ResourceNotFoundException("Order not found with id: " + orderId);
+        }
+    }
+
+
 
 
     private  String getPaymentMethod(String name){

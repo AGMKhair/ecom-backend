@@ -43,5 +43,27 @@ public class CategoryController {
         return APIResponseBuilder.success("Added Successfully",service.addMenu(req));
     }
 
+    @PutMapping("/{id}")
+    public APIResponse<Category> updateCategory(
+            @PathVariable Long id,
+            @RequestBody Category req
+    ) {
+        return APIResponseBuilder.success(
+                "Category updated successfully",
+                service.updateCategory(id, req)
+        );
+    }
+
+
+
+    @DeleteMapping("/{id}")
+    public APIResponse<Void> deleteCategory(@PathVariable Long id) {
+        service.deleteCategory(id);
+        return APIResponseBuilder.success(
+                "Category deleted successfully",
+                null
+        );
+    }
+
 }
 

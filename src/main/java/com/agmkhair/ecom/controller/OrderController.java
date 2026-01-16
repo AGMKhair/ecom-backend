@@ -7,6 +7,7 @@ import com.agmkhair.ecom.dto.OrderResponse;
 import com.agmkhair.ecom.entity.Orders;
 import com.agmkhair.ecom.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,5 +64,27 @@ public class OrderController {
     public APIResponse<List<Orders>> getCompleted(@RequestParam Long id) {
         return APIResponseBuilder.success( "Completed Order",service.getCompletedOrders(id));
     }
+
+    ///  Update Data form Admin
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<APIResponse<Void>> updateOrderStatus(
+            @PathVariable Long orderId,
+            @RequestParam int status
+    ) {
+
+        service.updateOrderStatus(orderId, status);
+        return ResponseEntity.ok(APIResponseBuilder.success("Order status updated successfully", null));
+    }
+
+    @PutMapping("/{orderId}/paid/status")
+    public ResponseEntity<APIResponse<Void>> updateOrderPaidStatus(
+            @PathVariable Long orderId,
+            @RequestParam int status
+    ) {
+
+        service.updateOrderStatus(orderId, status);
+        return ResponseEntity.ok(APIResponseBuilder.success("Order status updated successfully", null));
+    }
+
 
 }
