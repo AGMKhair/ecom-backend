@@ -85,6 +85,7 @@ public class ItemService {
         product.setTitle(updated.getTitle());
         product.setDescription(updated.getDescription());
         product.setPrice(updated.getPrice());
+        product.setOfferPrice(updated.getOfferPrice());
         product.setOldPrice(updated.getOldPrice());
         product.setQuantity(updated.getQuantity());
         product.setStatus(updated.getStatus());
@@ -171,8 +172,6 @@ public class ItemService {
         p.setQuantity(req.getQuantity());
         p.setUnit(req.getUnit());
 
-        p.setPrice(req.getPrice());
-        p.setOfferPrice(req.getOfferPrice());
 
         p.setPrice(req.getPrice());
         p.setOldPrice(req.getOldPrice());
@@ -213,6 +212,7 @@ public class ItemService {
 
         dto.setQuantity(p.getQuantity());
         dto.setPrice(p.getPrice());
+        dto.setOfferPrice(p.getOfferPrice());
         dto.setOldPrice(p.getOldPrice());
 
         dto.setStatus(p.getStatus());

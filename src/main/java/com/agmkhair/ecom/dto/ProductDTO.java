@@ -23,6 +23,7 @@ public class ProductDTO {
     private Integer quantity;
     private BigDecimal price;
     private BigDecimal oldPrice;
+    private BigDecimal offerPrice;
 
     private Integer status;
 
