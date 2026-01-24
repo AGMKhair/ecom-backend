@@ -214,6 +214,8 @@ public class ItemService {
         dto.setPrice(p.getPrice());
         dto.setOfferPrice(p.getOfferPrice());
         dto.setOldPrice(p.getOldPrice());
+        dto.setCreatedAt(p.getCreatedAt().toString());
+        dto.setFeatured(p.getFeatured());
 
         dto.setStatus(p.getStatus());
 
