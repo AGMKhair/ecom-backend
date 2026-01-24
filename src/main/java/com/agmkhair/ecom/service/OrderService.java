@@ -17,11 +17,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+    private final OrderRepository orderRepository;  // FIXED
     @Autowired
     CartService cartService;
-
-
-    private final OrderRepository orderRepository;  // FIXED
 
     public Orders createOrder(OrderRequest request) {
         Orders order = new Orders();
@@ -44,17 +42,16 @@ public class OrderService {
         order.setIsCompleted(0);
         order.setIsSeenByAdmin(0);
 
-        Orders result =  orderRepository.save(order);
-        if (result != null){
-            cartService.updateOrder(request.getUserId(),result.getId());
+        Orders result = orderRepository.save(order);
+        if (result != null) {
+            cartService.updateOrder(request.getUserId(), result.getId());
         }
 
-         return result;
+        return result;
     }
 
     public Orders updateOrder(Long id, OrderRequest request) {
-        Orders order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+        Orders order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
 
         order.setName(request.getName());
         order.setPhoneNo(request.getPhoneNo());
@@ -73,9 +70,7 @@ public class OrderService {
 
     public List<OrderResponse> getOrder(Long userId) {
 
-        List<Orders> orders = orderRepository
-                .findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Orders not found"));
+        List<Orders> orders = orderRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Orders not found"));
 
         List<OrderResponse> responseList = new ArrayList<>();
 
@@ -99,7 +94,6 @@ public class OrderService {
 
         return responseList;
     }
-
 
     public AllOrdersResponse getAllOrders() {
 
@@ -159,15 +153,16 @@ public class OrderService {
         return orderRepository.findByUserIdAndIsCompleted(userId, 1);
     }
 
+    ///  Admin Section
 
-
-///  Admin Section
+    public List<CartResponse> getOrderDetails(Long orderId) {
+        return cartService.getDetailsByOrderID(orderId);
+    }
 
     public String orderStatusUpdate(int status) {
         orderRepository.saveIsCompleted(status);
         return "Order status updated successfully";
     }
-
 
     public void updateOrderStatus(Long orderId, int status) {
         int updated = orderRepository.updateOrderStatus(orderId, status);
@@ -177,19 +172,15 @@ public class OrderService {
         }
     }
 
+    private String getPaymentMethod(String name) {
 
-
-
-    private  String getPaymentMethod(String name){
-
-        switch(name.toLowerCase())
-        {
+        switch (name.toLowerCase()) {
             case "cash":
-                return  "1";
+                return "1";
             case "bkash":
-                return  "2";
+                return "2";
             case "nagad":
-                return  "3";
+                return "3";
             default:
                 return "0";
         }

@@ -24,61 +24,60 @@ public class OrderController {
 
     @PutMapping("/update/{id}")
     public APIResponse<Orders> update(@PathVariable Long id, @RequestBody OrderRequest request) {
-        return APIResponseBuilder.success("Order update",  service.updateOrder(id, request));
+        return APIResponseBuilder.success("Order update", service.updateOrder(id, request));
     }
 
     @DeleteMapping("/delete/{id}")
     public APIResponse<Object> delete(@PathVariable Long id) {
         service.deleteOrder(id);
-        return APIResponseBuilder.success( "Order deleted successfully",null);
+        return APIResponseBuilder.success("Order deleted successfully", null);
     }
 
     /// for user data
-    @GetMapping
-    public APIResponse<List<OrderResponse>> get(@RequestParam Long id) {
-        return APIResponseBuilder.success( "Order Details",service.getOrder(id));
+    @GetMapping("/user/{userId}")
+    public APIResponse<List<OrderResponse>> getOrderByUserId(@PathVariable Long userId) {
+        return APIResponseBuilder.success("Order Details", service.getOrder(userId));
+    }
+
+    @GetMapping("/{orderId}")
+    public APIResponse<List<CartResponse>> getOrderDetails(@PathVariable Long orderId) {
+        return APIResponseBuilder.success("Order Details", service.getOrderDetails(orderId));
     }
 
     @GetMapping("/all")
     public APIResponse<AllOrdersResponse> all() {
-        return APIResponseBuilder.success( "All Order",service.getAllOrders());
+        return APIResponseBuilder.success("All Order", service.getAllOrders());
     }
 
     // UNPAID
     @GetMapping("/unpaid")
     public APIResponse<List<Orders>> getUnpaid(@RequestParam Long id) {
-        return APIResponseBuilder.success( "Unpaid Order",service.getUnpaidOrders(id));
+        return APIResponseBuilder.success("Unpaid Order", service.getUnpaidOrders(id));
     }
 
     // PAID
     @GetMapping("/paid")
     public APIResponse<List<Orders>> getPaid(@RequestParam Long id) {
 
-        return APIResponseBuilder.success( "Paid Order",service.getPaidOrders(id));
+        return APIResponseBuilder.success("Paid Order", service.getPaidOrders(id));
     }
 
     // COMPLETED
     @GetMapping("/complete")
     public APIResponse<List<Orders>> getCompleted(@RequestParam Long id) {
-        return APIResponseBuilder.success( "Completed Order",service.getCompletedOrders(id));
+        return APIResponseBuilder.success("Completed Order", service.getCompletedOrders(id));
     }
 
     ///  Update Data form Admin
     @PutMapping("/{orderId}/status")
-    public ResponseEntity<APIResponse<Void>> updateOrderStatus(
-            @PathVariable Long orderId,
-            @RequestParam int status
-    ) {
+    public ResponseEntity<APIResponse<Void>> updateOrderStatus(@PathVariable Long orderId, @RequestParam int status) {
 
         service.updateOrderStatus(orderId, status);
         return ResponseEntity.ok(APIResponseBuilder.success("Order status updated successfully", null));
     }
 
     @PutMapping("/{orderId}/paid/status")
-    public ResponseEntity<APIResponse<Void>> updateOrderPaidStatus(
-            @PathVariable Long orderId,
-            @RequestParam int status
-    ) {
+    public ResponseEntity<APIResponse<Void>> updateOrderPaidStatus(@PathVariable Long orderId, @RequestParam int status) {
 
         service.updateOrderStatus(orderId, status);
         return ResponseEntity.ok(APIResponseBuilder.success("Order status updated successfully", null));

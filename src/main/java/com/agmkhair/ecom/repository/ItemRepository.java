@@ -7,4 +7,5 @@ public interface ItemRepository extends JpaRepository<Products, Long> {
     List<Products> findByCategoryIdOrderByPriorityAsc(Long categoryId);
     List<Products> findByBrandIdOrderByPriorityAsc(Long brandId);
     String countByQuantityLessThan(int qty);
+    List<Products> findAllByOrderByCreatedAtDesc();
 }

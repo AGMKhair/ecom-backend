@@ -30,7 +30,7 @@ public class ItemService {
 
     public List<ProductDTO> getAll() {
 
-        List<Products> productsList = itemRepo.findAll();
+        List<Products> productsList = itemRepo.findAllByOrderByCreatedAtDesc();
 
         return productsList.stream()
                 .map(this::toDTO)   // entity → dto

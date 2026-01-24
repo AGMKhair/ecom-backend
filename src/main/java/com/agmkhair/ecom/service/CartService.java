@@ -92,8 +92,7 @@ public class CartService {
         }).collect(Collectors.toList());
     }
 
-    public  List<CartResponse> getDetailsByOrderID(Long userId,Long orderId)
-    {
+    public  List<CartResponse> getDetailsByOrderID(Long userId,Long orderId) {
         List<Cart> carts = cartRepo.findAllByUserIdAndOrderId(userId, orderId).orElse(null);
 
         return carts.stream().map(cart -> {
@@ -118,6 +117,34 @@ public class CartService {
             return dto;
         }).collect(Collectors.toList());
     }
+
+    public  List<CartResponse> getDetailsByOrderID(Long orderId) {
+        List<Cart> carts = cartRepo.findAllByOrderId(orderId).orElse(null);
+
+        return carts.stream().map(cart -> {
+            CartResponse dto = new CartResponse();
+
+            dto.setId(cart.getId());
+            dto.setQuantity(cart.getQuantity());
+            dto.setSize(cart.getSize());
+            dto.setColor(cart.getColor());
+
+            Products product = cart.getProducts();
+            if (product != null) {
+                ProductDTO productDTO = new ProductDTO();
+                productDTO.setId(product.getId());
+                productDTO.setTitle(product.getTitle());
+                productDTO.setPrice(product.getPrice());
+                productDTO.setImages(product.getImages());
+
+                dto.setProduct(productDTO);
+            }
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+
     public List<CartResponse> getCartByUserAndOrderIdNULL(Long userId) {
 
         List<Cart> carts = cartRepo.findAllByUserIdAndOrderIdIsNull(userId).orElse(null);
