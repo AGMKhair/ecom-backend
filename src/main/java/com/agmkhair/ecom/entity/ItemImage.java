@@ -25,7 +25,7 @@ public class ItemImage {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt  = LocalDateTime.now();
 
     // ⭐ Many Images -> One Item
     @ManyToOne

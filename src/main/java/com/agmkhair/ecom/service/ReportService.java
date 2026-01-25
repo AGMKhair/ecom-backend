@@ -1,7 +1,6 @@
 package com.agmkhair.ecom.service;
 
 import com.agmkhair.ecom.dto.DashboardReport;
-import com.agmkhair.ecom.exception.ResourceNotFoundException;
 import com.agmkhair.ecom.repository.ItemRepository;
 import com.agmkhair.ecom.repository.OrderRepository;
 import com.agmkhair.ecom.repository.UserRepository;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 @RequiredArgsConstructor
@@ -40,12 +40,15 @@ public class ReportService {
         long todayOrders = orderRepository.countByCreatedAtBetween(start, end);
         report.setTodayOrder(String.valueOf(todayOrders));
 
-        // =====================
-        // TODAY REVENUE
-        // =====================
-        BigDecimal todayRevenue = orderRepository.sumTotalAmountByCreatedAtBetween(start, end);
-        report.setTodayRevenue(String.valueOf(todayRevenue != null ? todayRevenue : BigDecimal.ZERO));
+        LocalDateTime startSellDate = LocalDate.now().atStartOfDay();
+        LocalDateTime endSellDate = LocalDate.now().atTime(LocalTime.MAX);
 
+        BigDecimal todaySell = orderRepository.sumTotalAmountByCreatedAtBetween(startSellDate, endSellDate);
+
+        report.setTodaySell(todaySell.toString());
+
+        BigDecimal totalSell = orderRepository.sumTotalAmount();
+        report.setTotalSell(totalSell.toString());
 
         report.setPendingOrders(orderRepository.countByIsCompleted(0));
 

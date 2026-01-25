@@ -10,7 +10,8 @@ public class DashboardReport {
     String todayOrder;
     String totalOrder;
     String totalProducts;
-    String todayRevenue;
+    String totalSell;
+    String todaySell;
     String pendingOrders;
     String deliveredOrder;
     String lowStock;

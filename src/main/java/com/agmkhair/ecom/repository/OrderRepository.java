@@ -25,8 +25,22 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
 
     String countByIsCompleted(int status);
 
-    @Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Orders o WHERE o.createdAt BETWEEN :start AND :end")
-    BigDecimal sumTotalAmountByCreatedAtBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+    @Query("""
+    SELECT COALESCE(SUM(o.totalAmount), 0)
+    FROM Orders o
+    WHERE o.isCompleted = 3
+      AND o.updatedAt BETWEEN :start AND :end
+""")
+    BigDecimal sumTotalAmountByCreatedAtBetween(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+
+
+
+
+    @Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Orders o WHERE o.isCompleted = 3")
+    BigDecimal sumTotalAmount();
 
     @Modifying
     @Query("UPDATE Orders o SET o.isCompleted = :status")
@@ -36,11 +50,16 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
     @Modifying
     @Transactional
     @Query("""
-                UPDATE Orders o 
-                SET o.isCompleted = :status 
-                WHERE o.id = :orderId
-            """)
-    int updateOrderStatus(@Param("orderId") Long orderId, @Param("status") int status);
+    UPDATE Orders o
+    SET o.isCompleted = :status,
+        o.updatedAt = CURRENT_TIMESTAMP
+    WHERE o.id = :orderId
+""")
+    int updateOrderStatus(
+            @Param("orderId") Long orderId,
+            @Param("status") int status
+    );
+
 
 
     @Modifying
