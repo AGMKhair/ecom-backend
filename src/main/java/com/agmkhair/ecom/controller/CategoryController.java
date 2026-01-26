@@ -56,7 +56,7 @@ public class CategoryController {
 
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public APIResponse<Void> deleteCategory(@PathVariable Long id) {
         service.deleteCategory(id);
         return APIResponseBuilder.success(
